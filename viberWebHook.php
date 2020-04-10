@@ -24,4 +24,4 @@ $logErrorFile = 'log/viber_error.txt';
 $logSuccessFile = 'log/viber_result.txt';
 $customHeaders = ["X-Viber-Auth-Token: " . $token];
 
-include('http_client.php');
+include('httpClient.php');

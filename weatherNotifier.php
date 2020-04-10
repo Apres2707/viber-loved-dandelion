@@ -6,7 +6,7 @@ $method = 'GET';
 $logErrorFile = 'log/weather_notifier_error.txt';
 $logSuccessFile = 'log/weather_notifier_result.txt';
 
-include_once('http_client.php');
+include_once('httpClient.php');
 
 $weather = [];
 $list = $response['list'];
