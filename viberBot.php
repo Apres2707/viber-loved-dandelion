@@ -20,58 +20,38 @@ $firstSmile = getRandom('smile.txt');
 $secondSmile = getRandom('smile.txt');
 $name = getRandom('name.txt');
 
-$avatarList = glob(__DIR__ . '/avatar/*.*');
-$avatarKey = array_rand($avatarList);
-$avatar = $avatarList[$avatarKey];
-
-if (!empty($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'cron') {
+if (!empty($text)) {
+    $text = $firstSmile . ' ' . $text . ' ' . $secondSmile;;
+} elseif (!empty($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'cron') {
     $startText = $_SERVER['argv'][2] ?? 'Ты мне очень';
     $text = $firstSmile . ' ' . $startText . ', ' . $name . '! ' . $secondSmile;
 } else {
     $text = 'Пиши, что хочешь, ' . $name .'! ' . $firstSmile . PHP_EOL . $secondSmile . ' Ты мне очень! ';
 }
 
-$sender = getRandom('sender.txt');
+$sender = $sender ?? getRandom('sender.txt');
+if (empty($avatar)) {
+    $avatarList = glob(__DIR__ . '/avatar/*.*');
+    $avatarKey = array_rand($avatarList);
+    $avatarPath = $avatarList[$avatarKey];
+    $avatar = 'https://miradmin.ru/viber/avatar/' . basename($avatarPath);
+}
+
+$method = 'POST';
+$logErrorFile = 'log/viber_error.txt';
+$logSuccessFile = 'log/viber_result.txt';
+$customHeaders = ["X-Viber-Auth-Token: " . $token];
 
 foreach ($idList as $id) {
-    $message = [
+    $postMessage = json_encode([
         'receiver' => $id,
         'sender' => [
             'name' => $sender,
-            'avatar' => 'https://miradmin.ru/viber/avatar/' . basename($avatar)
+            'avatar' => $avatar
         ],
         'type' => 'text',
         'text' => $text
-    ];
-    
-    $curl = curl_init();
-    curl_setopt_array(
-    	$curl,
-    	[
-    		CURLOPT_URL => $url,
-    		CURLOPT_RETURNTRANSFER => true,
-    		CURLOPT_ENCODING => "",
-    		CURLOPT_MAXREDIRS => 10,
-    		CURLOPT_TIMEOUT => 30,
-    		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    		CURLOPT_CUSTOMREQUEST => "POST",
-    		CURLOPT_POSTFIELDS => json_encode($message),
-    
-    		CURLOPT_HTTPHEADER => [
-    			"Cache-Control: no-cache",
-    			"Content-Type: application/JSON",
-    			"X-Viber-Auth-Token: " . $token
-    		]
-    	]
-    );
-    
-    $response = curl_exec($curl);
-    $error = curl_error($curl);
-    curl_close($curl);
-    
-    if ($error) {
-    	file_put_contents('viber_error.txt', date('Y-m-d h:i:s') . ' error: ' . $error . PHP_EOL, FILE_APPEND);
-    } else {
-    	file_put_contents('viber_result.txt', date('Y-m-d h:i:s') . ' response: ' . $response . PHP_EOL, FILE_APPEND);
-    }
+    ]);
+
+    include('http_client.php');
 }

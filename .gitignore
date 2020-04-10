@@ -1,4 +1,3 @@
 .idea
-incoming_message_list.txt
-viber_event_list.txt
-viber_result.txt
+log
+data
