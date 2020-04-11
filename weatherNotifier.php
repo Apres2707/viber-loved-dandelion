@@ -9,7 +9,8 @@ $logSuccessFile = 'log/weather_notifier_result.txt';
 include_once('httpClient.php');
 
 $weather = [];
-$list = $response['list'];
+$responseArray = json_decode($response, true);
+$list = $responseArray['list'];
 
 $morningTime = date('Y-m-d') . ' 09:00:00';
 $morningTempKey = array_keys(array_column($list, 'dt_txt'), $morningTime);
@@ -33,7 +34,7 @@ $dayText = 'Днём ' . $dayArray['main']['temp'] . ', ' . $dayArray['weather']
 $eveningText = 'А вечером ' . $eveningArray['main']['temp'] . 'градусов, ' . $eveningArray['weather']['description'] . ($eveningArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
 
 $text = $morningText . $dayText . $eveningText . 'Береги себя, пожалуйста';
-$name = 'Погодник';
+$sender = 'Погодник';
 $avatar = 'https://miradmin.ru/viber/picture/weather.jpg';
 
 include_once('viberBot.php');
