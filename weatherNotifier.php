@@ -29,9 +29,9 @@ $eveningArray = $list[$eveningTemp[0]];
 //$weather['evening'] = $eveningArray['main']['temp'];
 //file_put_contents('data/' . date("Y-m-d") . '_weather.txt', implode(PHP_EOL, $weather), FILE_APPEND);
 
-$morningText = 'Сегодня утром будет ' . $morningArray['main']['temp'] . 'градусов, ' . $morningArray['weather']['description'] . ($morningArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
-$dayText = 'Днём ' . $dayArray['main']['temp'] . ', ' . $dayArray['weather']['description'] . ($dayArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
-$eveningText = 'А вечером ' . $eveningArray['main']['temp'] . 'градусов, ' . $eveningArray['weather']['description'] . ($eveningArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
+$morningText = 'Сегодня утром будет ' . $morningArray['main']['temp'] . ' градусов, ' . $morningArray['weather'][0]['description'] . ($morningArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
+$dayText = 'Днём ' . $dayArray['main']['temp'] . ', ' . $dayArray['weather'][0]['description'] . ($dayArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
+$eveningText = 'А вечером ' . $eveningArray['main']['temp'] . ' градусов, ' . $eveningArray['weather'][0]['description'] . ($eveningArray['wind']['speed'] > 9 ? '. Ветрено.' : '.') . PHP_EOL;
 
 $text = $morningText . $dayText . $eveningText . 'Береги себя, пожалуйста';
 $sender = 'Погодник';
